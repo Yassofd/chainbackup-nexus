@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   HardDrive,
@@ -14,14 +14,14 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", count: null, active: true },
-  { icon: HardDrive, label: "Nodes", count: 42 },
-  { icon: Database, label: "Backups", count: 156 },
-  { icon: Network, label: "Network", count: null },
-  { icon: Activity, label: "Jobs", count: 8 },
-  { icon: ShieldCheck, label: "Security", count: null },
-  { icon: Cpu, label: "Resources", count: null },
-  { icon: Settings, label: "Settings", count: null },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/", count: null },
+  { icon: HardDrive, label: "Nodes", path: "/nodes", count: 42 },
+  { icon: Database, label: "Backups", path: "/backups", count: 156 },
+  { icon: Network, label: "Network", path: "/network", count: null },
+  { icon: Activity, label: "Jobs", path: "/jobs", count: 8 },
+  { icon: ShieldCheck, label: "Security", path: "/security", count: null },
+  { icon: Cpu, label: "Resources", path: "/resources", count: null },
+  { icon: Settings, label: "Settings", path: "/settings", count: null },
 ];
 
 interface AppSidebarProps {
@@ -30,7 +30,8 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <motion.aside
@@ -61,37 +62,40 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
 
       {/* Nav Items */}
       <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-hidden">
-        {navItems.map((item) => (
-          <button
-            key={item.label}
-            onClick={() => setActiveItem(item.label)}
-            className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-all duration-150
-              ${
-                activeItem === item.label
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-          >
-            <item.icon className="w-4 h-4 shrink-0" />
-            <AnimatePresence>
-              {!collapsed && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex-1 text-left whitespace-nowrap"
-                >
-                  {item.label}
-                </motion.span>
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <button
+              key={item.label}
+              onClick={() => navigate(item.path)}
+              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-all duration-150
+                ${
+                  isActive
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+            >
+              <item.icon className="w-4 h-4 shrink-0" />
+              <AnimatePresence>
+                {!collapsed && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex-1 text-left whitespace-nowrap"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              {!collapsed && item.count !== null && (
+                <span className="text-xs tabular-nums bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md">
+                  {item.count}
+                </span>
               )}
-            </AnimatePresence>
-            {!collapsed && item.count !== null && (
-              <span className="text-xs tabular-nums bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md">
-                {item.count}
-              </span>
-            )}
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Storage Quota */}
