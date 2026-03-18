@@ -23,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/network" element={<NetworkTopology />} />
             <Route path="/backups" element={<BackupsPage />} />
+            <Route path="/restore" element={<RestoreWizard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
