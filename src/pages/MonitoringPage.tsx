@@ -10,7 +10,7 @@ import { ThresholdConfig } from "@/components/monitoring/ThresholdConfig";
 import { LatencyHeatmap } from "@/components/monitoring/LatencyHeatmap";
 
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
-const fadeUp = { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.2, 0.8, 0.2, 1] } } };
+const fadeUp = { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.2, 0.8, 0.2, 1] as [number, number, number, number] } } };
 
 export default function MonitoringPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
