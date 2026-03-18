@@ -11,12 +11,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Cpu,
+  RotateCcw,
 } from "lucide-react";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/", count: null },
   { icon: HardDrive, label: "Nodes", path: "/nodes", count: 42 },
   { icon: Database, label: "Backups", path: "/backups", count: 156 },
+  { icon: RotateCcw, label: "Restore", path: "/restore", count: null },
   { icon: Network, label: "Network", path: "/network", count: null },
   { icon: Activity, label: "Jobs", path: "/jobs", count: 8 },
   { icon: ShieldCheck, label: "Security", path: "/security", count: null },

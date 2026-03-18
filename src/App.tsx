@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import Index from "./pages/Index.tsx";
 import NetworkTopology from "./pages/NetworkTopology.tsx";
 import BackupsPage from "./pages/BackupsPage.tsx";
+import RestoreWizard from "./pages/RestoreWizard.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/network" element={<NetworkTopology />} />
             <Route path="/backups" element={<BackupsPage />} />
+            <Route path="/restore" element={<RestoreWizard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
