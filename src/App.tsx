@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import Index from "./pages/Index.tsx";
 import NetworkTopology from "./pages/NetworkTopology.tsx";
 import BackupsPage from "./pages/BackupsPage.tsx";
+import RestoreWizard from "./pages/RestoreWizard.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
