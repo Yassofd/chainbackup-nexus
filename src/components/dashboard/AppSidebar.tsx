@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Cpu,
+  RotateCcw,
 } from "lucide-react";
 
 const navItems = [
