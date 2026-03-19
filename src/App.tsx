@@ -27,6 +27,7 @@ const App = () => (
             <Route path="/backups" element={<BackupsPage />} />
             <Route path="/restore" element={<RestoreWizard />} />
             <Route path="/monitoring" element={<MonitoringPage />} />
+            <Route path="/users" element={<UsersPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -22,6 +22,7 @@ const navItems = [
   { icon: RotateCcw, label: "Restore", path: "/restore", count: null },
   { icon: Network, label: "Network", path: "/network", count: null },
   { icon: Activity, label: "Monitoring", path: "/monitoring", count: null },
+  { icon: Users, label: "Users", path: "/users", count: 8 },
   { icon: ShieldCheck, label: "Security", path: "/security", count: null },
   { icon: Cpu, label: "Resources", path: "/resources", count: null },
   { icon: Settings, label: "Settings", path: "/settings", count: null },
