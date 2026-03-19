@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Cpu,
   RotateCcw,
+  Users,
 } from "lucide-react";
 
 const navItems = [
