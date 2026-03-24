@@ -10,6 +10,7 @@ import BackupsPage from "./pages/BackupsPage.tsx";
 import RestoreWizard from "./pages/RestoreWizard.tsx";
 import MonitoringPage from "./pages/MonitoringPage.tsx";
 import UsersPage from "./pages/UsersPage.tsx";
+import NodesPage from "./pages/NodesPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
