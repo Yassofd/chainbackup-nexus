@@ -166,6 +166,38 @@
     50% { opacity: 0.6; }
   }
 
+  /* Micro-interaction: card press */
+  .card-interactive {
+    @apply transition-all duration-200;
+  }
+  .card-interactive:hover {
+    @apply shadow-glass-md;
+    transform: translateY(-1px);
+  }
+  .card-interactive:active {
+    transform: translateY(0);
+  }
+
+  /* Live data indicator */
+  .live-dot {
+    @apply w-2 h-2 rounded-full bg-success relative;
+  }
+  .live-dot::after {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-success;
+    animation: livePing 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  @keyframes livePing {
+    0% { transform: scale(1); opacity: 0.75; }
+    75%, 100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  /* Smooth number transitions */
+  .metric-value {
+    @apply tabular-nums transition-all duration-500;
+    font-feature-settings: "tnum";
+  }
+
   .progress-bar-inner {
     @apply h-full rounded-full;
     background: linear-gradient(90deg, hsl(226 70% 55%), hsl(270 70% 60%));
