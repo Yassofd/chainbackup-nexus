@@ -24,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/nodes" element={<NodesPage />} />
             <Route path="/network" element={<NetworkTopology />} />
             <Route path="/backups" element={<BackupsPage />} />
             <Route path="/restore" element={<RestoreWizard />} />
