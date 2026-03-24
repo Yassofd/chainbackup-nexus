@@ -10,6 +10,7 @@ import BackupsPage from "./pages/BackupsPage.tsx";
 import RestoreWizard from "./pages/RestoreWizard.tsx";
 import MonitoringPage from "./pages/MonitoringPage.tsx";
 import UsersPage from "./pages/UsersPage.tsx";
+import NodesPage from "./pages/NodesPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/nodes" element={<NodesPage />} />
             <Route path="/network" element={<NetworkTopology />} />
             <Route path="/backups" element={<BackupsPage />} />
             <Route path="/restore" element={<RestoreWizard />} />
