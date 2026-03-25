@@ -11,6 +11,9 @@ import RestoreWizard from "./pages/RestoreWizard.tsx";
 import MonitoringPage from "./pages/MonitoringPage.tsx";
 import UsersPage from "./pages/UsersPage.tsx";
 import NodesPage from "./pages/NodesPage.tsx";
+import ResourcesPage from "./pages/ResourcesPage.tsx";
+import SettingsPage from "./pages/SettingsPage.tsx";
+import SecurityPage from "./pages/SecurityPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,9 @@ const App = () => (
             <Route path="/restore" element={<RestoreWizard />} />
             <Route path="/monitoring" element={<MonitoringPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/security" element={<SecurityPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
