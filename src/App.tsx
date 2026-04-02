@@ -14,6 +14,7 @@ import NodesPage from "./pages/NodesPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import SecurityPage from "./pages/SecurityPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/nodes" element={<NodesPage />} />
             <Route path="/network" element={<NetworkTopology />} />
             <Route path="/backups" element={<BackupsPage />} />
