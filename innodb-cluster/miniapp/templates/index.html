@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cluster HA — Instances</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f8;
+    --surface:#ffffff;
+    --border:#e4e6ec;
+    --text:#1b1e28;
+    --muted:#767c8c;
+    --accent:#5b57e0;
+    --accent-soft:#5b57e014;
+    --good:#1f9d63;
+    --good-soft:#1f9d6314;
+    --warn:#c9821a;
+    --warn-soft:#c9821a14;
+    --bad:#d0433f;
+    --bad-soft:#d0433f14;
+    --ring-track:#e9eaf0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inter', sans-serif; font-size:14px;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:28px 24px 60px; }
+
+  .crumb{ font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+  .crumb b{ color:var(--text); font-weight:600; }
+  .title-row{ display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+  .title-row .avatar{
+    width:30px; height:30px; border-radius:8px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.85rem;
+    flex-shrink:0;
+  }
+  h1{ font-size:1.15rem; font-weight:700; margin:0; }
+  .title-sub{ font-size:0.78rem; color:var(--muted); margin-top:2px;}
+
+  .banner{
+    display:flex; align-items:center; gap:12px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:12px 16px; margin-bottom:24px; font-size:0.85rem;
+  }
+  .banner .icon{ width:20px; height:20px; flex-shrink:0; }
+  .banner.good{ border-left:3px solid var(--good); }
+  .banner.warn{ border-left:3px solid var(--warn); }
+  .banner.bad{ border-left:3px solid var(--bad); }
+  .banner .icon.good{ color:var(--good); }
+  .banner .icon.warn{ color:var(--warn); }
+  .banner .icon.bad{ color:var(--bad); }
+  .banner strong{ font-weight:600; }
+  .banner span.muted{ color:var(--muted); }
+
+  /* Toolbar : ajout d'une donnée */
+  .toolbar{
+    display:flex; gap:10px; margin-bottom:28px;
+  }
+  .toolbar input[type=text]{
+    flex:1; padding:9px 12px; border-radius:8px; border:1px solid var(--border);
+    background:var(--surface); font-family:inherit; font-size:0.85rem; color:var(--text);
+  }
+  .toolbar input[type=text]:focus{ outline:none; border-color:var(--accent); }
+  .toolbar button{
+    padding:9px 16px; border-radius:8px; border:none; background:var(--accent);
+    color:#fff; font-weight:600; font-size:0.83rem; cursor:pointer; font-family:inherit;
+  }
+  .toolbar button:hover{ background:#4a46d0; }
+
+  /* Cartes donuts */
+  .panels{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:28px; }
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px;
+  }
+  .panel-title{ font-size:0.8rem; font-weight:600; color:var(--text); margin-bottom:16px; }
+  .donut-row{ display:flex; align-items:center; gap:18px; }
+  .donut{
+    width:88px; height:88px; border-radius:50%; position:relative; flex-shrink:0;
+  }
+  .donut::after{
+    content:''; position:absolute; inset:12px; background:var(--surface); border-radius:50%;
+  }
+  .donut-legend{ display:flex; flex-direction:column; gap:8px; }
+  .legend-item{ display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--muted); }
+  .legend-dot{ width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+  .legend-item b{ color:var(--text); font-weight:600; }
+
+  /* Tableau serveurs (style "Health") */
+  section{ margin-bottom:28px; }
+  .section-title{ font-size:0.85rem; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .section-title .count{ font-weight:500; color:var(--muted); font-size:0.78rem; }
+
+  table{ width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  thead th{
+    text-align:left; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.03em;
+    color:var(--muted); font-weight:600; padding:10px 16px; border-bottom:1px solid var(--border); background:#fafafc;
+  }
+  tbody td{ padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.84rem; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:#fafafe; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.74rem; font-weight:600;
+    padding:4px 10px; border-radius:999px;
+  }
+  .badge.good{ background:var(--good-soft); color:var(--good); }
+  .badge.bad{ background:var(--bad-soft); color:var(--bad); }
+  .badge .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .badge.pulse .dot{ animation:pulse 1.8s infinite; }
+  @keyframes pulse{ 0%{opacity:1;} 50%{opacity:0.35;} 100%{opacity:1;} }
+
+  .role-chip{
+    font-size:0.72rem; font-weight:600; padding:3px 9px; border-radius:6px; background:var(--accent-soft); color:var(--accent);
+  }
+  .role-chip.secondary{ background:#eef0f5; color:var(--muted); }
+
+  code.mono{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; background:#f6f6fa;
+    border:1px solid var(--border); border-radius:6px; padding:6px 10px; display:inline-block;
+    color:#3a3f52;
+  }
+
+  .presence{ display:flex; gap:5px; }
+  .pdot{ width:8px; height:8px; border-radius:50%; }
+  .pdot.ok{ background:var(--good); }
+  .pdot.missing{ background:var(--warn); }
+  .pdot.offline{ background:#d7d9e2; }
+
+  .empty-row td{ text-align:center; color:var(--muted); padding:32px; }
+
+  footer{ text-align:center; font-size:0.75rem; color:var(--muted); margin-top:20px; }
+
+  @media (max-width:720px){
+    .panels{ grid-template-columns:1fr; }
+    .toolbar{ flex-direction:column; }
+    table, thead, tbody, th, td, tr { display:block; }
+    thead{ display:none; }
+    tbody td{ border-bottom:none; padding:6px 16px; }
+    tbody tr{ border-bottom:1px solid var(--border); padding:10px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="crumb">Instances de base de données &nbsp;›&nbsp; <b>Cluster HA</b></div>
+  <div class="title-row">
+    <div class="avatar">DB</div>
+    <div>
+      <h1>innodb-cluster · {{ served_by or 'indisponible' }}</h1>
+      <div class="title-sub">Réplication à 3 nœuds — écritures via mysql-router</div>
+    </div>
+  </div>
+
+  {% if write_error %}
+    <div class="banner bad">
+      <svg class="icon bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div><strong>Service indisponible.</strong> <span class="muted">Nouvelle tentative automatique en cours.</span></div>
+    </div>
+  {% elif not consistent %}
+    <div class="banner bad">
+      <svg class="icon bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div><strong>Synchronisation en cours.</strong> <span class="muted">Un écart a été détecté entre les nœuds.</span></div>
+    </div>
+  {% elif online_count < total_count %}
+    <div class="banner warn">
+      <svg class="icon warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <div><strong>{{ online_count }}/{{ total_count }} nœuds en ligne.</strong> <span class="muted">Cluster dégradé mais opérationnel.</span></div>
+    </div>
+  {% else %}
+    <div class="banner good">
+      <svg class="icon good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      <div><strong>Tout est opérationnel.</strong> <span class="muted">{{ total_count }} nœuds en ligne, données synchronisées.</span></div>
+    </div>
+  {% endif %}
+
+  <form class="toolbar" method="post" action="/add">
+    <input type="text" name="content" placeholder="Ajouter une donnée de test…" required autocomplete="off">
+    <button type="submit">Insérer</button>
+  </form>
+
+  <div class="panels">
+    <div class="panel">
+      <div class="panel-title">Disponibilité</div>
+      <div class="donut-row">
+        <div class="donut" style="background: conic-gradient(var(--good) 0% {{ online_pct }}%, varcd ..gt ggit push
+        --ring-track) {{ online_pct }}% 100%);"></div>
+        <div class="donut-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--good)"></span> <b>{{ online_count }}</b>&nbsp;en ligne</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--ring-track)"></span> <b>{{ total_count - online_count }}</b>&nbsp;hors ligne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Rôles actifs</div>
+      <div class="donut-row">
+        <div class="donut" style="background: conic-gradient(var(--accent) 0% {{ primary_pct }}%, #d9d7fb {{ primary_pct }}% 100%);"></div>
+        <div class="donut-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span> <b>{{ primary_count }}</b>&nbsp;actif</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#d9d7fb"></span> <b>{{ secondary_count }}</b>&nbsp;secours</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Cohérence des données</div>
+      <div class="donut-row">
+        <div class="donut" style="background: conic-gradient({{ 'var(--good)' if consistent else 'var(--bad)' }} 0% {{ consistency_pct }}%, var(--ring-track) {{ consistency_pct }}% 100%);"></div>
+        <div class="donut-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:{{ 'var(--good)' if consistent else 'var(--bad)' }}"></span> <b>{{ 'Synchronisé' if consistent else 'Écart détecté' }}</b></div>
+          <div class="legend-item">entre les nœuds en ligne</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-title">Serveurs <span class="count">{{ total_count }} instances</span></div>
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Rôle</th><th>Enregistrements</th><th>État</th></tr>
+      </thead>
+      <tbody>
+        {% for n in nodes %}
+        <tr>
+          <td><strong>Serveur {{ loop.index }}</strong></td>
+          <td>
+            {% if n.role == 'PRIMARY' %}<span class="role-chip">Actif</span>
+            {% elif n.role == 'SECONDARY' %}<span class="role-chip secondary">Secours</span>
+            {% else %}<span class="role-chip secondary">—</span>{% endif %}
+          </td>
+          <td>{{ n.entries|length if n.online else '—' }}</td>
+          <td>
+            {% if n.online %}
+              <span class="badge good pulse"><span class="dot"></span> En ligne</span>
+            {% else %}
+              <span class="badge bad"><span class="dot"></span> Hors ligne</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-title">Détail des données <span class="count">{{ comparison_rows|length }} lignes</span></div>
+
+    <table>
+      <thead>
+        <tr><th>Contenu</th><th>Présence par serveur</th><th>État</th></tr>
+      </thead>
+      <tbody>
+        {% if comparison_rows|length == 0 %}
+        <tr class="empty-row"><td colspan="3">Aucune donnée enregistrée pour le moment.</td></tr>
+        {% endif %}
+        {% for row in comparison_rows %}
+          <tr>
+            <td><code class="mono">{{ row.content }}</code></td>
+            <td>
+              <div class="presence">
+                {% for state in row.presence %}
+                  <span class="pdot {{ state }}" title="Serveur {{ loop.index }}"></span>
+                {% endfor %}
+              </div>
+            </td>
+            <td>
+              {% if row.synced %}
+                <span class="badge good"><span class="dot"></span> Synchronisé</span>
+              {% else %}
+                <span class="badge bad"><span class="dot"></span> En attente</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <footer>Actualisation automatique toutes les 3 secondes</footer>
+</div>
+<script>setTimeout(() => location.reload(), 3000);</script>
+</body>
+</html>
